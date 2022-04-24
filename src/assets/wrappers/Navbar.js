@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.nav`
   height: var(--nav-height);
@@ -52,6 +52,7 @@ const Wrapper = styled.nav`
     border-radius: var(--borderRadius);
   }
   .show-dropdown {
+    width: fit-content;
     visibility: visible;
   }
   .dropdown-btn {
@@ -80,5 +81,5 @@ const Wrapper = styled.nav`
       display: block;
     }
   }
-`
-export default Wrapper
+`;
+export default Wrapper;

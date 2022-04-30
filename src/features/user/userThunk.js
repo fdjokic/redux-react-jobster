@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import customFetch from "../../utils/axios";
 import { logoutUser } from "./userSlice";
 
@@ -15,6 +16,9 @@ export const loginUserThunk = async (url, user, thunkAPI) => {
     const resp = await customFetch.post("/auth/login", user);
     return resp.data;
   } catch (error) {
+    if (error.response.status === 401) {
+      toast.error("Credentials are invalid");
+    }
     return thunkAPI.rejectWithValue(error.response);
   }
 };

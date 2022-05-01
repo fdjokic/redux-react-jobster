@@ -37,7 +37,6 @@ export const updateUser = createAsyncThunk(
     return updateUserThunk("/auth/updateUser", user, thunkAPI);
   }
 );
-
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -60,9 +59,9 @@ const userSlice = createSlice({
     },
     [registerUser.fulfilled]: (state, { payload }) => {
       const { user } = payload;
+      state.isLoading = false;
       state.user = user;
       addUserLocalStorage(user);
-      state.isLoading = false;
       toast.success(`Hello There ${user.name}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
@@ -74,9 +73,11 @@ const userSlice = createSlice({
     },
     [loginUser.fulfilled]: (state, { payload }) => {
       const { user } = payload;
-      state.user = user;
       state.isLoading = false;
-      toast.success(`Welcome back ${user.name}`);
+      state.user = user;
+      addUserLocalStorage(user);
+
+      toast.success(`Welcome Back ${user.name}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -89,9 +90,9 @@ const userSlice = createSlice({
       const { user } = payload;
       state.isLoading = false;
       state.user = user;
-
       addUserLocalStorage(user);
-      toast.success("User Updated");
+
+      toast.success(`User Updated!`);
     },
     [updateUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -99,6 +100,6 @@ const userSlice = createSlice({
     },
   },
 });
-export const { toggleSidebar, logoutUser } = userSlice.actions;
 
+export const { toggleSidebar, logoutUser } = userSlice.actions;
 export default userSlice.reducer;

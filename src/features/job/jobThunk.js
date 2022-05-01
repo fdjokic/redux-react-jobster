@@ -5,7 +5,7 @@ import { logoutUser } from "../user/userSlice";
 
 export const createJobThunk = async (job, thunkAPI) => {
   try {
-    const resp = await customFetch.post("/jobs", job);
+    const resp = await customFetch.post("/jobs", job, thunkAPI);
     thunkAPI.dispatch(clearValues());
     return resp.data;
   } catch (error) {

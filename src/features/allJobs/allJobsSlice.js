@@ -27,10 +27,22 @@ export const getAllJobs = createAsyncThunk(
     let url = `/jobs`;
     try {
       const resp = await customFetch.get(url);
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.msg);
+    }
+  }
+);
+
+export const showStats = createAsyncThunk(
+  "allJobs/showStats",
+  async (_, thunkAPI) => {
+    try {
+      const resp = await customFetch.get("/jobs/stats");
+      console.log(resp.data);
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }
 );
@@ -56,6 +68,19 @@ const allJobsSlice = createSlice({
       state.jobs = jobs;
     },
     [getAllJobs.rejected]: (state, { payload }) => {
+      toast.error(payload);
+    },
+    [showStats.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [showStats.fulfilled]: (state, { payload }) => {
+      const { defaultStats, monthlyApplications } = payload;
+      state.isLoading = false;
+      state.stats = defaultStats;
+      state.monthlyApplications = monthlyApplications;
+    },
+    [showStats.rejected]: (state, { payload }) => {
+      state.isLoading = false;
       toast.error(payload);
     },
   },

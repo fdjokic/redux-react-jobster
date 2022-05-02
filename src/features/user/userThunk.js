@@ -19,9 +19,10 @@ export const loginUserThunk = async (url, user, thunkAPI) => {
     if (error.response.status === 401) {
       toast.error("Credentials are invalid");
     }
-    return thunkAPI.rejectWithValue(error.response);
+    return thunkAPI.rejectWithValue(error.response.msg);
   }
 };
+
 export const updateUserThunk = async (url, user, thunkAPI) => {
   try {
     const resp = await customFetch.patch("/auth/updateUser", user);

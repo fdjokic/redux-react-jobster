@@ -24,9 +24,13 @@ const initialState = {
 export const getAllJobs = createAsyncThunk(
   "allJobs/getJobs",
   async (_, thunkAPI) => {
-    let url = `/jobs`;
+    let url = `/jobs?status=${initialFiltersState.searchStatus}&jobtype=${initialFiltersState.searchType}&sort=${initialFiltersState.sort}&page=${initialFiltersState.page}`;
+    if (initialFiltersState.search) {
+      url = url + `search=${initialFiltersState.search}`;
+    }
     try {
       const resp = await customFetch.get(url);
+      console.log(resp.data);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.msg);
@@ -57,6 +61,16 @@ const allJobsSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
+    handleChange: (state, { payload: { name, value } }) => {
+      state.page = 1;
+      state[name] = value;
+    },
+    clearFilters: (state) => {
+      return { ...state, ...initialFiltersState };
+    },
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
   },
   extraReducers: {
     [getAllJobs.pending]: (state) => {
@@ -66,6 +80,8 @@ const allJobsSlice = createSlice({
       const { jobs } = payload;
       state.isLoading = false;
       state.jobs = jobs;
+      state.numOfPages = payload.numOfPages;
+      state.totalJobs = payload.totalJobs;
     },
     [getAllJobs.rejected]: (state, { payload }) => {
       toast.error(payload);
@@ -86,5 +102,11 @@ const allJobsSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading } = allJobsSlice.actions;
+export const {
+  showLoading,
+  hideLoading,
+  handleChange,
+  clearFilters,
+  changePage,
+} = allJobsSlice.actions;
 export default allJobsSlice.reducer;

@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
-import Job from "./Job";
-import Loading from "./Loading";
-import { useSelector, useDispatch } from "react-redux";
-import Wrapper from "../assets/wrappers/JobsContainer";
-import { getAllJobs } from "../features/allJobs/allJobsSlice";
-import PageBtnContainer from "./PageBtnContainer";
-
+import { useEffect } from 'react';
+import Job from './Job';
+import Wrapper from '../assets/wrappers/JobsContainer';
+import { useSelector, useDispatch } from 'react-redux';
+import Loading from './Loading';
+import { getAllJobs } from '../features/allJobs/allJobsSlice';
+import PageBtnContainer from './PageBtnContainer';
 const JobsContainer = () => {
   const {
     jobs,
@@ -14,18 +13,18 @@ const JobsContainer = () => {
     totalJobs,
     numOfPages,
     search,
-    searchType,
     searchStatus,
+    searchType,
     sort,
   } = useSelector((store) => store.allJobs);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllJobs());
-  }, [page, search, searchType, searchStatus, sort, dispatch]);
+  }, [page, search, searchStatus, searchType, sort]);
 
   if (isLoading) {
-    return <Loading center />;
+    return <Loading />;
   }
 
   if (jobs.length === 0) {
@@ -39,16 +38,15 @@ const JobsContainer = () => {
   return (
     <Wrapper>
       <h5>
-        {totalJobs} job{jobs.length > 1 ? "s" : null} found
+        {totalJobs} job{jobs.length > 1 && 's'} found
       </h5>
-      <div className="jobs">
+      <div className='jobs'>
         {jobs.map((job) => {
           return <Job key={job._id} {...job} />;
         })}
       </div>
-      {numOfPages > 1 ? <PageBtnContainer /> : null}
+      {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };
-
 export default JobsContainer;
